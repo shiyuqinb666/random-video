@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView android:background="@drawable/bg_app" android:layout_width="fill_parent" android:layout_height="fill_parent" android:fillViewport="true"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout android:orientation="vertical" android:paddingLeft="18.0dip" android:paddingTop="20.0dip" android:paddingRight="18.0dip" android:paddingBottom="28.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content">
+        <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <ImageButton android:id="@id/btn_back" android:background="@android:color/transparent" android:padding="8.0dip" android:layout_width="40.0dip" android:layout_height="40.0dip" android:src="@drawable/ic_back" android:scaleType="fitCenter" android:tint="#ffffffff" />
+            <TextView android:textSize="21.0sp" android:textStyle="bold" android:textColor="#ffffffff" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="6.0dip" android:text="关于" />
+        </LinearLayout>
+        <TextView android:textSize="28.0sp" android:textStyle="bold" android:textColor="#ffffffff" android:gravity="center" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="26.0dip" android:text="随机视界" android:shadowColor="#aaff4f9a" android:shadowRadius="14.0" android:letterSpacing="0.1" />
+        <TextView android:textSize="12.0sp" android:textColor="#99ffffff" android:gravity="center" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="6.0dip" android:text="v1.0.0" />
+        <TextView android:textSize="12.0sp" android:textColor="#b3ffffff" android:background="@drawable/bg_panel" android:padding="18.0dip" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="24.0dip" android:text="一个自带在线播放源的随机视频 App。\n\n· 12 个在线分类：JK制服、洛丽、洛丽塔、Cosplay、汉服、吊带、丝袜、泳装、校园、穿搭、日常、全部在线\n· 分类映射基于每接口 7-8 帧真实截帧统计，按命中率挂源\n· 每个分类挂多个源，一条挂了自动换下一个\n· 播放器「✕ 不对」会给源记黑账，同源被记 3 次自动降权\n· 同时兼容本地视频自动分拣、静态 JSON 源、手动直链\n\n视频来源为第三方公开接口，内容与可用性由提供方决定。" android:lineSpacingExtra="4.0dip" />
+        <TextView android:textSize="11.0sp" android:textColor="#66ff8fd0" android:gravity="center" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="20.0dip" android:text="Made with 💗 for 爸爸" />
+    </LinearLayout>
+</ScrollView>

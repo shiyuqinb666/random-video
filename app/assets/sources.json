@@ -1,0 +1,50 @@
+{
+  "version": 2,
+  "sources": [
+    {
+      "name": "内置演示",
+      "videos": {
+        "jk": [
+          { "title": "演示片段 · 校园日常", "url": "https://vjs.zencdn.net/v/oceans.mp4" },
+          { "title": "演示片段 · 放学路上", "url": "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/720/Big_Buck_Bunny_720_10s_1MB.mp4" }
+        ],
+        "loli": [
+          { "title": "演示片段 · 甜系随拍", "url": "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4" },
+          { "title": "演示片段 · 午后阳光", "url": "https://test-videos.co.uk/vids/jellyfish/mp4/h264/720/Jellyfish_720_10s_1MB.mp4" }
+        ],
+        "lolita": [
+          { "title": "演示片段 · 洋装日", "url": "https://media.w3.org/2010/05/sintel/trailer.mp4" },
+          { "title": "演示片段 · 花嫁外拍", "url": "https://test-videos.co.uk/vids/sintel/mp4/h264/720/Sintel_720_10s_1MB.mp4" }
+        ],
+        "cosplay": [
+          { "title": "演示片段 · 漫展现场", "url": "https://media.w3.org/2010/05/bunny/trailer.mp4" },
+          { "title": "演示片段 · 角色扮演", "url": "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/360/Big_Buck_Bunny_360_10s_1MB.mp4" }
+        ],
+        "hanfu": [
+          { "title": "演示片段 · 古风庭院", "url": "https://media.w3.org/2010/05/video/movie_300.mp4" },
+          { "title": "演示片段 · 国风长廊", "url": "https://media.w3.org/2010/05/bunny/movie.mp4" }
+        ],
+        "dance": [
+          { "title": "演示片段 · 翻跳练习", "url": "https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4" },
+          { "title": "演示片段 · 舞台灯光", "url": "https://test-videos.co.uk/vids/jellyfish/mp4/h264/360/Jellyfish_360_10s_1MB.mp4" }
+        ],
+        "qipao": [
+          { "title": "演示片段 · 老上海", "url": "https://filesamples.com/samples/video/mp4/sample_960x400_ocean_with_audio.mp4" },
+          { "title": "演示片段 · 东方曲线", "url": "https://test-videos.co.uk/vids/bigbuckbunny/mp4/h264/1080/Big_Buck_Bunny_1080_10s_1MB.mp4" }
+        ],
+        "swim": [
+          { "title": "演示片段 · 海边", "url": "https://filesamples.com/samples/video/mp4/sample_640x360.mp4" },
+          { "title": "演示片段 · 夏日泳池", "url": "https://test-videos.co.uk/vids/sintel/mp4/h264/360/Sintel_360_10s_1MB.mp4" }
+        ],
+        "legwear": [
+          { "title": "演示片段 · 街拍", "url": "https://cdn.plyr.io/static/demo/View_From_A_Blue_Moon_Trailer-576p.mp4" },
+          { "title": "演示片段 · 长腿微光", "url": "https://test-videos.co.uk/vids/jellyfish/mp4/h264/1080/Jellyfish_1080_10s_1MB.mp4" }
+        ],
+        "daily": [
+          { "title": "演示片段 · 一天", "url": "https://filesamples.com/samples/video/mp4/sample_1280x720_surfing_with_audio.mp4" },
+          { "title": "演示片段 · 随拍五分钟", "url": "https://download.samplelib.com/mp4/sample-5s.mp4" }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="about">关于</string>
+    <string name="app_name">随机视界</string>
+    <string name="app_slogan">每次打开，都是新的心动</string>
+    <string name="empty_hint">"这个分类还没有视频
+把视频放进对应文件夹，或在设置里加在线源"</string>
+    <string name="favorite">收藏</string>
+    <string name="favorited">已收藏</string>
+    <string name="loading">正在整理你的片库…</string>
+    <string name="next_random">下一条</string>
+    <string name="random_play">随机播放</string>
+    <string name="random_this">本分类随机</string>
+    <string name="refresh">重新扫描</string>
+    <string name="settings">设置</string>
+    <string name="tab_all">全部</string>
+</resources>

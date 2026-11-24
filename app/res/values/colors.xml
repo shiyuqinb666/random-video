@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="bg_deep">#ff0b0011</color>
+    <color name="bg_mid">#ff1c0129</color>
+    <color name="card_stroke">#33ff9ad5</color>
+    <color name="cyan">#ff23e5d5</color>
+    <color name="ic_launcher_background">#ff7c4dff</color>
+    <color name="pink">#ffff4f9a</color>
+    <color name="purple">#ff7c4dff</color>
+    <color name="text_hint">#66ffffff</color>
+    <color name="text_primary">#ffffffff</color>
+    <color name="text_secondary">#b3ffffff</color>
+</resources>

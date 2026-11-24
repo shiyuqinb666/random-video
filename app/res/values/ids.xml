@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="bottom_bar" />
+    <item type="id" name="btn_add_manual" />
+    <item type="id" name="btn_back" />
+    <item type="id" name="btn_clear_fav" />
+    <item type="id" name="btn_clear_history" />
+    <item type="id" name="btn_dislike" />
+    <item type="id" name="btn_fav" />
+    <item type="id" name="btn_load_source" />
+    <item type="id" name="btn_loop" />
+    <item type="id" name="btn_next" />
+    <item type="id" name="btn_pick_files" />
+    <item type="id" name="btn_random_all" />
+    <item type="id" name="btn_random_cat" />
+    <item type="id" name="btn_refresh" />
+    <item type="id" name="btn_rescan" />
+    <item type="id" name="btn_reset_dislike" />
+    <item type="id" name="btn_settings" />
+    <item type="id" name="card_root" />
+    <item type="id" name="et_manual_urls" />
+    <item type="id" name="et_source_url" />
+    <item type="id" name="grid_categories" />
+    <item type="id" name="img_fav" />
+    <item type="id" name="list_videos" />
+    <item type="id" name="pb_loading" />
+    <item type="id" name="seek" />
+    <item type="id" name="top_bar" />
+    <item type="id" name="tv_about" />
+    <item type="id" name="tv_cat_count" />
+    <item type="id" name="tv_cat_name" />
+    <item type="id" name="tv_cat_sub" />
+    <item type="id" name="tv_empty" />
+    <item type="id" name="tv_loop" />
+    <item type="id" name="tv_pick_category" />
+    <item type="id" name="tv_scan_status" />
+    <item type="id" name="tv_source" />
+    <item type="id" name="tv_source_status" />
+    <item type="id" name="tv_stats" />
+    <item type="id" name="tv_subtitle" />
+    <item type="id" name="tv_time" />
+    <item type="id" name="tv_title" />
+    <item type="id" name="tv_video_meta" />
+    <item type="id" name="tv_video_title" />
+    <item type="id" name="video" />
+</resources>
