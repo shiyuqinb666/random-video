@@ -137,6 +137,7 @@ public class SettingsActivity extends Activity {
         tvSourceStatus.setText(buildSourceStatus());
 
         injectHistoryRow();
+        injectCacheRow();
         injectHiddenEntry();
     }
 
@@ -185,6 +186,64 @@ public class SettingsActivity extends Activity {
             card.addView(btn, card.getChildCount(), lp);
         } catch (Throwable th) {
             IO.log("injectHistoryRow " + th);
+        }
+    }
+
+    /** 「数据」卡片里加一行封面缓存管理。 */
+    private void injectCacheRow() {
+        try {
+            View content = findViewById(android.R.id.content);
+            if (!(content instanceof ViewGroup)) {
+                return;
+            }
+            View first = ((ViewGroup) content).getChildAt(0);
+            LinearLayout card = null;
+            if (first instanceof ScrollView) {
+                View inner = ((ScrollView) first).getChildAt(0);
+                if (inner instanceof LinearLayout) {
+                    View reset = findViewById(R.id.btn_reset_dislike);
+                    if (reset != null && reset.getParent() instanceof LinearLayout) {
+                        card = (LinearLayout) reset.getParent();
+                    }
+                }
+            }
+            if (card == null) {
+                return;
+            }
+            for (int i = 0; i < card.getChildCount(); i++) {
+                if ("cache_row".equals(card.getChildAt(i).getTag())) {
+                    return;
+                }
+            }
+            final long size = Thumb.cacheSize(this);
+            final int count = Thumb.cacheCount(this);
+
+            final LinearLayout btn = new LinearLayout(this);
+            btn.setTag("cache_row");
+            btn.setOrientation(LinearLayout.HORIZONTAL);
+            btn.setGravity(android.view.Gravity.CENTER);
+            btn.setBackgroundResource(R.drawable.bg_btn_ghost);
+            btn.setClickable(true);
+            btn.setFocusable(true);
+            final TextView label = new TextView(this);
+            label.setText("🧹 封面缓存 " + Util.fmtSize(size) + "（" + count + " 张）· 点我清除");
+            label.setTextSize(13f);
+            label.setTextColor(0xccffffff);
+            btn.addView(label);
+            btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Thumb.clear(SettingsActivity.this);
+                    label.setText("🧹 封面缓存 0B（0 张）· 已清除");
+                    Util.toast(SettingsActivity.this, "封面缓存已清除，下次浏览会自动重建");
+                }
+            });
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, Util.dp(this, 44f));
+            lp.topMargin = Util.dp(this, 10f);
+            card.addView(btn, card.getChildCount(), lp);
+        } catch (Throwable th) {
+            IO.log("injectCacheRow " + th);
         }
     }
 

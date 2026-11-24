@@ -37,9 +37,8 @@ public final class Thumb {
     private static final ExecutorService POOL_LOCAL = Executors.newFixedThreadPool(2);
     private static final ExecutorService POOL_REMOTE = Executors.newSingleThreadExecutor();
     private static final HashMap<String, Integer> FAILED = new HashMap<String, Integer>();
-    private static final java.util.concurrent.atomic.AtomicInteger INFLIGHT =
-            new java.util.concurrent.atomic.AtomicInteger(0);
-    private static final int MAX_INFLIGHT = 16;
+    /** 失败记录上限，超过就整批清空，避免长会话里 Map 无限增长。 */
+    private static final int MAX_FAILED = 400;
 
     private static LruCache<String, Bitmap> cache;
 
@@ -125,22 +124,15 @@ public final class Thumb {
                 return; // 已经失败过，别反复重试
             }
         }
-        if (INFLIGHT.get() >= MAX_INFLIGHT) {
-            return; // 队列太挤，先不排，等下次滚动再说
-        }
-        INFLIGHT.incrementAndGet();
         pool.execute(new Runnable() {
             @Override
             public void run() {
-                Bitmap grabbed = null;
-                try {
-                    grabbed = grab(app, url);
-                } finally {
-                    INFLIGHT.decrementAndGet();
-                }
-                final Bitmap bmp = grabbed;
+                final Bitmap bmp = grab(app, url);
                 if (bmp == null) {
                     synchronized (FAILED) {
+                        if (FAILED.size() >= MAX_FAILED) {
+                            FAILED.clear();
+                        }
                         FAILED.put(url, Integer.valueOf(1));
                     }
                     return;
@@ -282,6 +274,31 @@ public final class Thumb {
         } catch (Throwable ignored) {
         } finally {
             IO.close(fos);
+        }
+    }
+
+    /** 当前磁盘封面缓存大小（字节）。 */
+    public static long cacheSize(Context c) {
+        long total = 0L;
+        try {
+            File[] files = cacheDir(c).listFiles();
+            if (files != null) {
+                for (int i = 0; i < files.length; i++) {
+                    total += files[i].length();
+                }
+            }
+        } catch (Throwable ignored) {
+        }
+        return total;
+    }
+
+    /** 磁盘上的封面文件个数。 */
+    public static int cacheCount(Context c) {
+        try {
+            File[] files = cacheDir(c).listFiles();
+            return files == null ? 0 : files.length;
+        } catch (Throwable ignored) {
+            return 0;
         }
     }
 

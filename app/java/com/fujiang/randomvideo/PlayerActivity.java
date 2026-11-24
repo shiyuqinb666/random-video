@@ -32,6 +32,7 @@ public class PlayerActivity extends Activity {
     private static final String EXTRA_URL = "url";
     private static final String EXTRA_API = "api";
 
+    private static final int REQ_WRITE = 1002;
     private static final int BARS_AUTO_HIDE_MS = 3200;
     private static final int TICK_MS = 500;
     /** 进程内的断点续播位置（同一支视频再打开会接着播）。 */
@@ -66,6 +67,8 @@ public class PlayerActivity extends Activity {
     private int apiFail = 0;
     private int playCount = 0;
     private int generation = 0;
+    private MediaPlayer mediaPlayer;
+    private float playSpeed = 1.0f;
     private int lastVideoWidth = 0;
     private int lastVideoHeight = 0;
     private View btnDownload;
@@ -138,6 +141,7 @@ public class PlayerActivity extends Activity {
         topBar = (LinearLayout) findViewById(R.id.top_bar);
         bottomBar = (LinearLayout) findViewById(R.id.bottom_bar);
 
+        loadSpeed();
         bindControls();
         injectDownloadButton();
         bindGestures();
@@ -308,6 +312,10 @@ public class PlayerActivity extends Activity {
             Util.toast(this, "还没有正在播的视频");
             return;
         }
+        if (!ensureWritePermission()) {
+            Util.toast(this, "已申请存储权限，授权后会自动开始下载");
+            return;
+        }
         if (!Downloader.canDownload(currentUrl)) {
             Util.toast(this, "这条已经在手机里了（" + (current == null ? "本地" : current.sourceLabel) + "）");
             return;
@@ -325,8 +333,45 @@ public class PlayerActivity extends Activity {
         }
     }
 
+    /**
+     * Android 6~9（API 23~28）往公共 Movies 目录写文件需要 WRITE_EXTERNAL_STORAGE，
+     * 没申请会导致下载静默失败。API 29+ 走分区存储不需要，API 22 及以下安装时已授予。
+     */
+    private boolean ensureWritePermission() {
+        if (android.os.Build.VERSION.SDK_INT >= 29 || android.os.Build.VERSION.SDK_INT < 23) {
+            return true;
+        }
+        try {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                return true;
+            }
+            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQ_WRITE);
+            return false;
+        } catch (Throwable th) {
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int request, String[] perms, int[] results) {
+        super.onRequestPermissionsResult(request, perms, results);
+        if (request == REQ_WRITE) {
+            boolean granted = results != null && results.length > 0
+                    && results[0] == android.content.pm.PackageManager.PERMISSION_GRANTED;
+            if (granted) {
+                downloadCurrent();
+            } else {
+                Util.toast(this, "没有存储权限，视频存不进 Movies 目录");
+            }
+        }
+    }
+
     private void showLongPressMenu() {
-        final String[] items = new String[]{"⬇ 下载这条", "复制链接", current != null && lib.isFav(current) ? "取消收藏" : "收藏这条", "打开" + Downloader.dirHint()};
+        final String[] items = new String[]{"⬇ 下载这条", "复制链接", "分享这条",
+                "播放速度（当前 " + playSpeed + "x）",
+                current != null && lib.isFav(current) ? "取消收藏" : "收藏这条",
+                "打开" + Downloader.dirHint()};
         new android.app.AlertDialog.Builder(this)
                 .setTitle(current == null ? "当前视频" : Util.ellipsis(current.title, 30))
                 .setItems(items, new android.content.DialogInterface.OnClickListener() {
@@ -337,6 +382,10 @@ public class PlayerActivity extends Activity {
                         } else if (which == 1) {
                             copyUrl();
                         } else if (which == 2) {
+                            shareCurrent();
+                        } else if (which == 3) {
+                            pickSpeed();
+                        } else if (which == 4) {
                             if (current != null) {
                                 boolean added = lib.toggleFav(current);
                                 refreshFavIcon();
@@ -438,10 +487,12 @@ public class PlayerActivity extends Activity {
             @Override
             public void onPrepared(final MediaPlayer mp) {
                 pb.setVisibility(View.GONE);
+                mediaPlayer = mp;
                 try {
                     mp.setLooping(false);
                 } catch (Throwable ignored) {
                 }
+                applySpeed();
                 mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
                     @Override
                     public void onVideoSizeChanged(MediaPlayer player, int width, int height) {
@@ -541,15 +592,19 @@ public class PlayerActivity extends Activity {
             if (realCover != null && realCover.length() > 0) {
                 found.cover = realCover;
             }
-        } else if (realTitle != null && realTitle.length() > 0) {
-            found.title = realTitle;
-            if (realCover != null && realCover.length() > 0) {
-                found.cover = realCover;
-            }
         }
         current = found;
-        tvTitle.setText(found.title);
-        tvSource.setText(found.metaText());
+        // 源站标题只用于本次展示和历史记录，不回写片库对象
+        // （回写会导致同一条视频在其它分类列表里标题被改掉）
+        Video shown = found;
+        if (realTitle != null && realTitle.length() > 0
+                && !realTitle.equals(found.title)) {
+            shown = new Video(realTitle, url, found.category, found.sourceLabel,
+                    found.durationMs, found.local);
+            shown.cover = realCover != null && realCover.length() > 0 ? realCover : found.cover;
+        }
+        tvTitle.setText(shown.title);
+        tvSource.setText(shown.metaText());
         if (apiMode) {
             int count = ApiResolver.countOf(lastApi);
             String label = "在线源 " + (lastApi == null ? "" : Util.nameFromUrl(lastApi));
@@ -568,7 +623,7 @@ public class PlayerActivity extends Activity {
             pb.setVisibility(View.GONE);
             Util.toast(this, "播放失败：" + th.getClass().getSimpleName());
         }
-        lib.addHistory(found);
+        lib.addHistory(shown);
         ui.removeCallbacks(tick);
         if (resumed) {
             ui.post(tick);
@@ -747,6 +802,79 @@ public class PlayerActivity extends Activity {
     }
 
     // ------------------------------------------------------------ 画面 / 进度
+
+    /** 应用播放倍速（setPlaybackParams 需要 API 23+）。 */
+    private void applySpeed() {
+        if (mediaPlayer == null) {
+            return;
+        }
+        if (android.os.Build.VERSION.SDK_INT < 23) {
+            return;
+        }
+        try {
+            android.media.PlaybackParams params = mediaPlayer.getPlaybackParams();
+            if (params == null) {
+                params = new android.media.PlaybackParams();
+            }
+            params.setSpeed(playSpeed);
+            mediaPlayer.setPlaybackParams(params);
+        } catch (Throwable th) {
+            IO.log("applySpeed " + th);
+        }
+    }
+
+    private void loadSpeed() {
+        try {
+            playSpeed = lib.prefs().getFloat("play_speed", 1.0f);
+            if (playSpeed < 0.25f || playSpeed > 3.0f) {
+                playSpeed = 1.0f;
+            }
+        } catch (Throwable ignored) {
+            playSpeed = 1.0f;
+        }
+    }
+
+    private void pickSpeed() {
+        if (android.os.Build.VERSION.SDK_INT < 23) {
+            Util.toast(this, "当前系统版本（Android 5.x）不支持倍速播放");
+            return;
+        }
+        final float[] speeds = {0.5f, 0.75f, 1.0f, 1.25f, 1.5f, 2.0f};
+        String[] items = new String[speeds.length];
+        for (int i = 0; i < speeds.length; i++) {
+            items[i] = (speeds[i] == 1.0f ? "1.0x（正常）" : speeds[i] + "x")
+                    + (Math.abs(speeds[i] - playSpeed) < 0.01f ? "   ✓" : "");
+        }
+        new android.app.AlertDialog.Builder(this)
+                .setTitle("播放速度")
+                .setItems(items, new android.content.DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(android.content.DialogInterface dialog, int which) {
+                        playSpeed = speeds[which];
+                        lib.prefs().edit().putFloat("play_speed", playSpeed).apply();
+                        applySpeed();
+                        Util.toast(PlayerActivity.this, "倍速 " + playSpeed + "x");
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .show();
+    }
+
+    private void shareCurrent() {
+        if (currentUrl == null) {
+            return;
+        }
+        try {
+            String title = current == null ? Util.nameFromUrl(currentUrl) : current.title;
+            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, title);
+            intent.putExtra(android.content.Intent.EXTRA_TEXT, title + "\n" + currentUrl);
+            startActivity(android.content.Intent.createChooser(intent, "分享这条视频"));
+        } catch (Throwable th) {
+            Util.toast(this, "分享失败：" + th.getClass().getSimpleName());
+        }
+    }
 
     /** 保持原始比例，居中留黑边，不再把画面拉变形。 */
     @Override

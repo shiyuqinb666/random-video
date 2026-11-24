@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -26,6 +27,9 @@ public class CategoryActivity extends Activity {
     private String catKey;
     private TextView tvEmpty;
     private TextView tvSubtitle;
+    private android.widget.EditText etSearch;
+    private final List<Video> allData = new ArrayList<Video>();
+    private String query = "";
 
     public static void start(Context context, String key) {
         Intent intent = new Intent(context, CategoryActivity.class);
@@ -82,6 +86,7 @@ public class CategoryActivity extends Activity {
             }
         });
 
+        injectSearch();
         ((ImageButton) findViewById(R.id.btn_back)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,11 +117,108 @@ public class CategoryActivity extends Activity {
         refresh();
     }
 
+    /** 顶部插入搜索框：按标题 / 来源实时过滤当前分类。 */
+    private void injectSearch() {
+        try {
+            View content = findViewById(android.R.id.content);
+            if (!(content instanceof ViewGroup)) {
+                return;
+            }
+            View first = ((ViewGroup) content).getChildAt(0);
+            if (!(first instanceof LinearLayout)) {
+                return;
+            }
+            LinearLayout root = (LinearLayout) first;
+            for (int i = 0; i < root.getChildCount(); i++) {
+                if ("search_row".equals(root.getChildAt(i).getTag())) {
+                    return;
+                }
+            }
+            LinearLayout row = new LinearLayout(this);
+            row.setTag("search_row");
+            row.setOrientation(LinearLayout.HORIZONTAL);
+            int pad = Util.dp(this, 14f);
+            row.setPadding(pad, 0, pad, Util.dp(this, 6f));
+
+            etSearch = new android.widget.EditText(this);
+            etSearch.setHint("搜索标题 / 来源");
+            etSearch.setTextSize(13f);
+            etSearch.setTextColor(0xffffffff);
+            etSearch.setHintTextColor(0x66ffffff);
+            etSearch.setSingleLine(true);
+            etSearch.setBackgroundResource(R.drawable.bg_input);
+            etSearch.setPadding(Util.dp(this, 12f), 0, Util.dp(this, 12f), 0);
+            etSearch.setInputType(android.text.InputType.TYPE_CLASS_TEXT);
+            etSearch.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_SEARCH);
+            row.addView(etSearch, new LinearLayout.LayoutParams(0,
+                    Util.dp(this, 42f), 1f));
+
+            etSearch.addTextChangedListener(new android.text.TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int a, int b, int c) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int a, int b, int c) {
+                }
+
+                @Override
+                public void afterTextChanged(android.text.Editable e) {
+                    query = e == null ? "" : e.toString().trim();
+                    applyFilter();
+                }
+            });
+
+            // 插在标题栏下方（索引 1），列表前面
+            int at = root.getChildCount() > 1 ? 1 : root.getChildCount();
+            root.addView(row, at, new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+        } catch (Throwable th) {
+            IO.log("injectSearch " + th);
+        }
+    }
+
+    /** 按 query 过滤 allData，并刷新列表与空状态。 */
+    private void applyFilter() {
+        List<Video> shown;
+        if (query.length() == 0) {
+            shown = new ArrayList<Video>(allData);
+        } else {
+            String q = IO.lower(query);
+            shown = new ArrayList<Video>();
+            for (int i = 0; i < allData.size(); i++) {
+                Video v = allData.get(i);
+                if (IO.lower(v.title).contains(q) || IO.lower(v.sourceLabel).contains(q)
+                        || IO.lower(v.category).contains(q)) {
+                    shown.add(v);
+                }
+            }
+        }
+        if (adapter != null) {
+            adapter.setData(shown);
+        }
+        tvEmpty.setVisibility(shown.isEmpty() ? View.VISIBLE : View.GONE);
+        if (shown.isEmpty() && query.length() > 0) {
+            tvEmpty.setText("没有匹配「" + query + "」的视频");
+        } else {
+            tvEmpty.setText("这个分类还没有视频\n把视频放进对应文件夹，或在设置里加在线源");
+        }
+        Category category = lib.category(catKey);
+        if (category != null && tvSubtitle != null) {
+            String text = category.sub + " · 共 " + allData.size() + " 条";
+            if (query.length() > 0) {
+                text = text + "（筛选 " + shown.size() + "）";
+            }
+            tvSubtitle.setText(text);
+        }
+    }
+
     private void showItemMenu(final Video video) {
         final boolean fav = lib.isFav(video);
         String[] items = new String[]{
                 fav ? "取消收藏" : "收藏这条",
                 "复制链接",
+                "分享",
                 "播放",
                 "从这个分类移除"
         };
@@ -134,9 +236,12 @@ public class CategoryActivity extends Activity {
                                 copy(video.url);
                                 break;
                             case 2:
-                                Hidden.play(CategoryActivity.this, catKey, video.url);
+                                share(video);
                                 break;
                             case 3:
+                                Hidden.play(CategoryActivity.this, catKey, video.url);
+                                break;
+                            case 4:
                                 lib.removeVideo(video);
                                 lib.dirty = true;
                                 refresh();
@@ -148,6 +253,18 @@ public class CategoryActivity extends Activity {
                     }
                 })
                 .show();
+    }
+
+    private void share(Video video) {
+        try {
+            android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_SEND);
+            intent.setType("text/plain");
+            intent.putExtra(android.content.Intent.EXTRA_SUBJECT, video.title);
+            intent.putExtra(android.content.Intent.EXTRA_TEXT, video.title + "\n" + video.url);
+            startActivity(android.content.Intent.createChooser(intent, "分享这条视频"));
+        } catch (Throwable th) {
+            Util.toast(this, "分享失败：" + th.getClass().getSimpleName());
+        }
     }
 
     private void copy(String text) {
@@ -171,13 +288,8 @@ public class CategoryActivity extends Activity {
                 list = Hidden.customVideos(this);
             }
         }
-        if (adapter != null) {
-            adapter.setData(list);
-        }
-        tvEmpty.setVisibility(list.isEmpty() ? View.VISIBLE : View.GONE);
-        Category category = lib.category(catKey);
-        if (category != null && tvSubtitle != null) {
-            tvSubtitle.setText(category.sub + " · 共 " + list.size() + " 条");
-        }
+        allData.clear();
+        allData.addAll(list);
+        applyFilter();
     }
 }

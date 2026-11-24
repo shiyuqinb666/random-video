@@ -77,6 +77,10 @@ public class VideoAdapter extends BaseAdapter {
         } else {
             holder = (Holder) view.getTag();
         }
+        // 数据可能在绑定过程中被替换（导入/删除/搜索过滤），越界就交回空行避免崩溃
+        if (position < 0 || position >= this.data.size()) {
+            return view;
+        }
         final Video video = this.data.get(position);
         holder.title.setText((position + 1) + ". " + Util.ellipsis(video.title, 40));
         holder.meta.setText(video.metaText());

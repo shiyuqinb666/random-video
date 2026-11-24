@@ -485,7 +485,7 @@ public class Library {
         }
     }
 
-    public int parseSourceJson(String json, String label) {
+    public synchronized int parseSourceJson(String json, String label) {
         int total = 0;
         try {
             JSONObject root = new JSONObject(json);
@@ -554,7 +554,7 @@ public class Library {
         return Util.nameFromUrl(url);
     }
 
-    public int loadRemoteSource(String url) {
+    public synchronized int loadRemoteSource(String url) {
         java.net.HttpURLConnection conn = null;
         try {
             conn = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
@@ -686,7 +686,7 @@ public class Library {
         return this.favs.size();
     }
 
-    public void addHistory(Video v) {
+    public synchronized void addHistory(Video v) {
         if (v == null || v.url.length() == 0) {
             return;
         }
@@ -758,12 +758,12 @@ public class Library {
     }
 
     /** 播放记录快照（最新的在前）。 */
-    public List<Hist> historyList() {
+    public synchronized List<Hist> historyList() {
         return new ArrayList<Hist>(this.history);
     }
 
     /** 看过的视频（最新的在前）：优先用片库里的标题，其次用记录里存的标题。 */
-    public List<Video> historyVideos() {
+    public synchronized List<Video> historyVideos() {
         List<Video> out = new ArrayList<Video>();
         List<Hist> list = historyList();
         for (int i = 0; i < list.size(); i++) {
@@ -779,7 +779,7 @@ public class Library {
         return out;
     }
 
-    public void removeHistory(String url) {
+    public synchronized void removeHistory(String url) {
         if (TextUtils.isEmpty(url)) {
             return;
         }
@@ -1020,7 +1020,7 @@ public class Library {
 
     // ---------------------------------------------------------------- 手动视频
 
-    public void loadManual() {
+    public synchronized void loadManual() {
         try {
             String s = this.sp.getString(K_MANUAL, "");
             if (TextUtils.isEmpty(s)) {
@@ -1043,7 +1043,7 @@ public class Library {
     }
 
     /** 批量加手动链接：一次解析、一次落盘，导入几十条也不卡。 */
-    public int addManualVideos(String catKey, String lines) {
+    public synchronized int addManualVideos(String catKey, String lines) {
         if (TextUtils.isEmpty(lines)) {
             return 0;
         }
@@ -1064,11 +1064,11 @@ public class Library {
     }
 
     /** 文件选择器批量导入。 */
-    public int addManualUris(String catKey, List<String> uris, List<String> names) {
+    public synchronized int addManualUris(String catKey, List<String> uris, List<String> names) {
         return addBatch(catKey, uris, names, "设备导入");
     }
 
-    public int addSingleManualVideo(String catKey, String url, String title) {
+    public synchronized int addSingleManualVideo(String catKey, String url, String title) {
         if (TextUtils.isEmpty(url)) {
             return 0;
         }
@@ -1172,7 +1172,7 @@ public class Library {
         return removed;
     }
 
-    private void addVideo(Video v) {
+    private synchronized void addVideo(Video v) {
         if (v == null || TextUtils.isEmpty(v.url)) {
             return;
         }
@@ -1191,7 +1191,7 @@ public class Library {
         }
     }
 
-    public List<Video> allVideos() {
+    public synchronized List<Video> allVideos() {
         List<Video> out = new ArrayList<Video>();
         for (int i = 0; i < this.categories.size(); i++) {
             Category c = this.categories.get(i);
@@ -1206,7 +1206,7 @@ public class Library {
         return out;
     }
 
-    public List<Video> list(String catKey) {
+    public synchronized List<Video> list(String catKey) {
         if (C_ALL.equals(catKey)) {
             return allVideos();
         }
@@ -1221,10 +1221,11 @@ public class Library {
             return out;
         }
         List<Video> l = this.byCat.get(catKey);
-        return l == null ? new ArrayList<Video>() : l;
+        // 返回快照：调用方在 UI 线程迭代时，后台扫描/导入可能正在改内部列表
+        return l == null ? new ArrayList<Video>() : new ArrayList<Video>(l);
     }
 
-    public int count(String catKey) {
+    public synchronized int count(String catKey) {
         return list(catKey).size();
     }
 
@@ -1241,7 +1242,7 @@ public class Library {
         }
     }
 
-    public Video find(String url) {
+    public synchronized Video find(String url) {
         if (TextUtils.isEmpty(url)) {
             return null;
         }
@@ -1252,7 +1253,7 @@ public class Library {
      * 随机取一条：避开 avoidUrl（当前正在播的）以及该分类最近播过的几条，
      * 这样同一个分类不太会来回放同一条。
      */
-    public Video random(String catKey, String avoidUrl) {
+    public synchronized Video random(String catKey, String avoidUrl) {
         List<Video> all = list(catKey);
         if (all.isEmpty()) {
             return null;
@@ -1299,7 +1300,7 @@ public class Library {
         }
     }
 
-    public String statsText() {
+    public synchronized String statsText() {
         if (!this.statsDirty && this.statsCache != null) {
             return this.statsCache;
         }

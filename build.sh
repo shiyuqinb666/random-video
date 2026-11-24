@@ -26,7 +26,7 @@ R8_JAR="${R8_JAR:-}"
 KS="${KS:-$ROOT/release.ks}"
 KS_PASS="${KS_PASS:-}"
 KS_ALIAS="${KS_ALIAS:-app}"
-VERSION="1.3.7"
+VERSION="1.3.8"
 
 die() { echo "错误: $*" >&2; exit 1; }
 

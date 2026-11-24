@@ -194,14 +194,14 @@ public final class Downloader {
                 DownloadManager.Query q = new DownloadManager.Query().setFilterById(idArr);
                 cur = dm.query(q);
                 while (cur != null && cur.moveToNext()) {
-                    long id = cur.getLong(cur.getColumnIndex(DownloadManager.COLUMN_ID));
+                    long id = colLong(cur, DownloadManager.COLUMN_ID, 0L);
                     Dl d = map.get(Long.valueOf(id));
                     if (d == null) {
                         continue;
                     }
-                    d.status = cur.getInt(cur.getColumnIndex(DownloadManager.COLUMN_STATUS));
-                    d.done = cur.getLong(cur.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
-                    d.total = cur.getLong(cur.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                    d.status = (int) colLong(cur, DownloadManager.COLUMN_STATUS, 0L);
+                    d.done = colLong(cur, DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR, 0L);
+                    d.total = colLong(cur, DownloadManager.COLUMN_TOTAL_SIZE_BYTES, 0L);
                     if (d.finished()) {
                         try {
                             android.net.Uri u = dm.getUriForDownloadedFile(id);
@@ -256,6 +256,22 @@ public final class Downloader {
             }
             prefs(c).edit().putString(K_RECORDS, out.toString()).apply();
         } catch (Throwable ignored) {
+        }
+    }
+
+    /**
+     * 安全取列：个别 ROM / 旧版本 DownloadManager 可能缺列，
+     * getColumnIndex 拿到 -1 再取值会抛异常，这里统一兜住。
+     */
+    private static long colLong(android.database.Cursor c, String column, long def) {
+        try {
+            int i = c.getColumnIndex(column);
+            if (i < 0 || c.isNull(i)) {
+                return def;
+            }
+            return c.getLong(i);
+        } catch (Throwable th) {
+            return def;
         }
     }
 
