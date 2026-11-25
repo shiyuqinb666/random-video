@@ -163,6 +163,22 @@ public final class ApiResolver {
                 FAST_FAILED.add(apiUrl);
             }
         }
+        // 再试 ?type=text：部分接口在这个模式下直接吐纯文本直链，比 302 少一次往返
+        if (allowFast && apiUrl.indexOf('?') < 0 && !TEXT_FAILED.contains(apiUrl)) {
+            String textBody = simpleGet(apiUrl + "?type=text");
+            if (textBody == null) {
+                TEXT_FAILED.add(apiUrl);
+            } else {
+                java.util.regex.Matcher m = P_ANY.matcher(normalize(textBody));
+                while (m.find()) {
+                    String u = trimUrl(m.group());
+                    if (u != null && looksLikeDirectVideo(u)) {
+                        return new Meta(u, "", "", 0);
+                    }
+                }
+                TEXT_FAILED.add(apiUrl);
+            }
+        }
         HttpURLConnection conn = null;
         try {
             String current = apiUrl;
@@ -215,6 +231,10 @@ public final class ApiResolver {
     }
 
     /** 极简 GET，只要 body 字符串；失败返回 null。 */
+    /** 试过 ?type=text 但拿不到东西的接口。 */
+    private static final java.util.Set<String> TEXT_FAILED =
+            java.util.Collections.synchronizedSet(new java.util.HashSet<String>());
+
     /** 试过 ?type=json 但拿不到东西的接口，后面就别再浪费一次超时。 */
     private static final java.util.Set<String> FAST_FAILED =
             java.util.Collections.synchronizedSet(new java.util.HashSet<String>());

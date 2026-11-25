@@ -157,111 +157,136 @@ public class Library {
         this.categories.clear();
 
         this.categories.add(new Category("jk", "JK制服", "水手服・百褶裙", -13711873, -9810433, true,
-                apis(A_JKSP, A_BAISIS, A_NVGAO, A_XJJ, A_QINGCHUN, A_XIAOXIAO, A_KSSP),
-                "jk", "jksp", "制服", "水手服", "水手", "百褶裙", "百褶", "校服", "seifuku", "school uniform", "jk制服", "jk裙", "jk服"));
+                apis(A_JKSP, A_BAISIS, A_NVGAO, A_XJJ, A_QINGCHUN, A_XIAOXIAO, A_KSSP, A_ZZXJJ),
+                "jk", "jksp", "制服", "水手服", "水手", "百褶裙", "百褶", "校服", "seifuku", "school uniform",
+                        "jk制服", "jk裙", "jk服", "jk写真"));
 
         this.categories.add(new Category("loli", "洛丽", "甜系・轻洛丽", -34120, -23445, true,
-                apis(A_LUOLI, A_COS, A_TIANMEI, A_QINGCHUN, A_XIAOXIAO, A_BAISIS),
-                "loli", "洛丽", "轻洛丽", "甜系", "luoli", "萝莉", "lori", "小个子", "软妹"));
+                apis(A_LUOLI, A_COS, A_TIANMEI, A_QINGCHUN, A_XIAOXIAO, A_BAISIS, A_JKSP, A_NDYM),
+                "loli", "洛丽", "轻洛丽", "甜系", "luoli", "萝莉", "lori", "小个子", "软妹", "少女感"));
 
         this.categories.add(new Category("lolita", "洛丽塔", "洋装・蕾丝・女仆", -5153537, -9818923, true,
-                apis(A_LUOLI, A_KSDZ, A_MANZHAN, A_COS, A_BIANZHUANG, A_CHUANDA),
+                apis(A_LUOLI, A_KSDZ, A_MANZHAN, A_COS, A_BIANZHUANG, A_CHUANDA, A_KSFC),
                 "lolita", "洛丽塔", "jsk", "茶会", "lolita裙", "蓬蓬裙", "连衣", "小裙"));
 
         this.categories.add(new Category("cosplay", "Cosplay", "二次元・角色", -14424619, -15822936, true,
-                apis(A_COS, A_MANZHAN, A_KSDZ, A_KSSP, A_KSFC),
-                "cosplay", "cos", "coser", "二次元", "动漫", "角色", "出c", "cos服", "角色扮演", "cos图", "cos照", "痛包"));
+                apis(A_COS, A_MANZHAN, A_KSDZ, A_KSSP, A_KSFC, A_BIANZHUANG, A_REWU),
+                "cosplay", "cos", "coser", "二次元", "动漫", "角色", "出c", "cos服", "角色扮演", "cos图", "cos照",
+                        "痛包"));
 
         this.categories.add(new Category("tianmei", "甜妹", "甜系・清纯・软萌", -2371585, -6249696, true,
-                apis(A_TIANMEI, A_QINGCHUN, A_XIAOXIAO, A_LUOLI, A_BAISIS, A_JKSP, A_NDYM, A_NVGAO),
-                "甜妹", "tianmei", "甜美", "清纯", "qingchun", "软萌", "可爱", "keai", "萌妹", "甜心", "治愈", "笑容"));
+                apis(A_TIANMEI, A_QINGCHUN, A_XIAOXIAO, A_LUOLI, A_BAISIS, A_JKSP, A_NDYM, A_NVGAO,
+                        A_ZZXJJ),
+                "甜妹", "tianmei", "甜美", "清纯", "qingchun", "软萌", "可爱", "keai", "萌妹", "甜心", "治愈", "笑容",
+                        "纯欲"));
 
         this.categories.add(new Category("hanfu", "汉服", "古风・国风", -1545637, -7462080, true,
-                apis(A_HANFU, A_MANZHAN, A_CHUANDA, A_BIANZHUANG, A_KSDZ),
-                "汉服", "hanfu", "古风", "国风", "马面", "明制", "襦裙", "旗袍", "qipao", "唐装", "汉元素", "宋制", "齐胸"));
+                apis(A_HANFU, A_MANZHAN, A_CHUANDA, A_BIANZHUANG, A_KSDZ, A_TIANMEI),
+                "汉服", "hanfu", "古风", "国风", "马面", "明制", "襦裙", "汉元素", "宋制", "齐胸", "唐制"));
+
+        this.categories.add(new Category("qipao", "旗袍", "立领・开叉・东方曲线", -14079693, -14321664, true,
+                apis(A_HANFU, A_CHUANDA, A_REWU, A_WMSC, A_MANZHAN),
+                "旗袍", "qipao", "cheongsam", "立领", "开叉", "改良旗袍"));
 
         this.categories.add(new Category("night", "深夜", "黑丝・网袜・吊带", -15003613, -12968115, true,
-                apis(A_HEISIS, A_WMSC, A_DIAODAI, A_REWU, A_BAISIS, A_YUZU),
+                apis(A_HEISIS, A_WMSC, A_DIAODAI, A_REWU, A_BAISIS, A_YUZU, A_SHEJIE),
                 "深夜", "夜里", "night", "午夜", "夜拍", "夜跑", "凌晨", "夜景", "夜晚", "深夜档"));
 
-        this.categories.add(new Category("dress", "洋装", "蕾丝・女仆・花嫁", -13990085, -16740807, true,
-                apis(A_KSDZ, A_BIANZHUANG, A_CHUANDA, A_MANZHAN, A_LUOLI, A_KSFC),
-                "洋装", "蕾丝", "女仆", "dress", "公主", "礼服", "小裙子", "洋服", "洛可可", "maid", "蓬蓬", "蝴蝶结"));
+        this.categories.add(new Category("dress", "洋装", "蕾丝・女仆・公主", -13990085, -16740807, true,
+                apis(A_KSDZ, A_BIANZHUANG, A_CHUANDA, A_MANZHAN, A_LUOLI, A_KSFC, A_KSSP),
+                "洋装", "蕾丝", "女仆", "dress", "公主", "礼服", "蝴蝶结", "洋服", "洛可可", "maid", "蓬蓬"));
 
         this.categories.add(new Category("bride", "花嫁", "婚纱・白纱・写真", -14013421, -14995249, true,
-                apis(A_MANZHAN, A_KSDZ, A_CHUANDA, A_LUOLI, A_BIANZHUANG),
+                apis(A_MANZHAN, A_KSDZ, A_CHUANDA, A_LUOLI, A_BIANZHUANG, A_XIAOXIAO),
                 "花嫁", "婚纱", "白纱", "wedding", "bride", "头纱", "婚纱照", "新娘", "敬酒服", "秀禾"));
 
         this.categories.add(new Category("expo", "漫展", "现场・玩家・角色", -13599024, -14752592, true,
-                apis(A_MANZHAN, A_COS, A_KSFC, A_KSSP, A_KSDZ),
+                apis(A_MANZHAN, A_COS, A_KSFC, A_KSSP, A_KSDZ, A_CHUANDA, A_SBKL),
                 "漫展", "现场", "玩家", "expo", "展子", "cp展", "cj", "chinajoy", "wf展", "展台", "返图"));
 
         this.categories.add(new Category("diaodai", "吊带", "贴身・露肩", -41846, -8712144, true,
-                apis(A_DIAODAI, A_REWU, A_WMSC, A_HEISIS, A_YUZU, A_BAISIS),
+                apis(A_DIAODAI, A_REWU, A_WMSC, A_HEISIS, A_YUZU, A_BAISIS, A_TIANMEI),
                 "吊带", "camisole", "吊带裙", "露肩", "背心", "小吊带", "抹胸", "一字肩"));
 
         this.categories.add(new Category("silk", "丝袜", "白丝・黑丝・连裤袜", -5005825, -10797154, true,
-                apis(A_HEISIS, A_WMSC, A_BAISIS, A_REWU, A_YUZU, A_DIAODAI),
+                apis(A_HEISIS, A_WMSC, A_BAISIS, A_REWU, A_YUZU, A_DIAODAI, A_SHEJIE),
                 "丝袜", "连裤袜", "pantyhose", "网袜", "丝袜腿", "stocking", "长筒袜", "丝袜高跟", "透肉"));
 
         this.categories.add(new Category("baisi", "白丝", "白丝・白袜・清纯", -1601965, -6250335, true,
-                apis(A_BAISIS, A_JKSP, A_YUZU, A_QINGCHUN, A_WMSC),
+                apis(A_BAISIS, A_JKSP, A_YUZU, A_QINGCHUN, A_WMSC, A_XIAOXIAO),
                 "白丝", "baisi", "白袜", "过膝袜", "白丝袜", "小白袜", "白丝腿", "白丝高跟"));
 
-        this.categories.add(new Category("heisi", "黑丝", "黑丝・黑袜・御姐", -13686784, -14540254, true,
-                apis(A_HEISIS, A_WMSC, A_BAISIS, A_REWU, A_DIAODAI),
-                "黑丝", "heisi", "黑袜", "黑丝袜", "黑丝腿", "渔网"));
+        this.categories.add(new Category("heisi", "黑丝", "黑丝・御姐", -13686784, -14540254, true,
+                apis(A_HEISIS, A_WMSC, A_BAISIS, A_REWU, A_DIAODAI, A_YUZU),
+                "黑丝", "heisi", "黑袜", "黑丝袜", "黑丝腿", "渔网", "御姐", "yujie"));
 
         this.categories.add(new Category("leg", "美腿", "长腿・腿部特写", -1602350, -7598616, true,
-                apis(A_YUZU, A_WMSC, A_BAISIS, A_HEISIS, A_DIAODAI),
+                apis(A_YUZU, A_WMSC, A_BAISIS, A_HEISIS, A_DIAODAI, A_REWU, A_SHEJIE),
                 "美腿", "长腿", "大长腿", "legging", "legs", "腿部", "高跟", "高跟鞋", "细腿", "小腿", "靴子", "短裤"));
 
         this.categories.add(new Category("dance", "热舞", "舞蹈・翻跳・舞台", -13399935, -14996966, true,
-                apis(A_REWU, A_YUZU, A_DIAODAI, A_WMSC),
-                "热舞", "舞蹈", "跳舞", "翻跳", "舞台", "dance", "dancing", "cover", "宅舞", "韩舞", "爵士", "kpop", "编舞", "直拍"));
+                apis(A_REWU, A_YUZU, A_DIAODAI, A_WMSC, A_KSSP, A_KSFC, A_ZZXJJ),
+                "热舞", "舞蹈", "跳舞", "翻跳", "舞台", "dance", "dancing", "cover", "宅舞", "韩舞", "爵士", "kpop",
+                        "编舞", "直拍", "舞见"));
 
         this.categories.add(new Category("swim", "泳装", "海边・泳池・比基尼", -13250305, -16089396, true,
-                apis(A_REWU, A_WMSC, A_YUZU, A_DIAODAI, A_BAISIS),
+                apis(A_REWU, A_WMSC, A_YUZU, A_DIAODAI, A_BAISIS, A_HEISIS),
                 "泳装", "泳衣", "比基尼", "bikini", "swim", "沙滩", "泳池", "海边", "湿身", "冲浪", "溯溪", "水上"));
 
         this.categories.add(new Category("campus", "校园", "操场・走廊・教室", -10929, -1683200, true,
-                apis(A_NVGAO, A_XJJ, A_QINGCHUN, A_XIAOXIAO, A_ZZXJJ, A_KSSP),
-                "校园", "操场", "走廊", "教室", "宿舍", "课间", "升旗", "campus", "教学楼", "图书馆", "社团"));
+                apis(A_NVGAO, A_XJJ, A_QINGCHUN, A_XIAOXIAO, A_ZZXJJ, A_KSSP, A_TIANMEI, A_NDYM),
+                "校园", "操场", "走廊", "教室", "宿舍", "课间", "升旗", "campus", "教学楼", "图书馆", "社团", "食堂"));
 
         this.categories.add(new Category("student", "学生装", "校服・水手服・日常", -1162808, -9410920, true,
-                apis(A_NVGAO, A_JKSP, A_XJJ, A_QINGCHUN, A_XIAOXIAO),
-                "学生装", "女高", "nvgao", "高中生", "学妹", "学姐", "学妹装", "新生", "学园", "校花"));
+                apis(A_NVGAO, A_JKSP, A_XJJ, A_QINGCHUN, A_XIAOXIAO, A_BAISIS, A_ZZXJJ),
+                "学生装", "女高", "nvgao", "高中生", "学妹", "学姐", "学妹装", "新生", "学园", "校花", "学妹感"));
 
         this.categories.add(new Category("outfit", "穿搭", "闺蜜・变装・OOTD", -8585269, -16750244, true,
-                apis(A_BIANZHUANG, A_CHUANDA, A_KSDZ, A_KSFC, A_SHEJIE, A_KSSP),
-                "穿搭", "变装", "闺蜜", "outfit", "ootd", "搭配", "换装", "lookbook", "开箱", "试穿", "上身", "开箱试穿"));
+                apis(A_BIANZHUANG, A_CHUANDA, A_KSDZ, A_KSFC, A_SHEJIE, A_KSSP, A_REWU),
+                "穿搭", "变装", "闺蜜", "outfit", "ootd", "搭配", "换装", "lookbook", "开箱", "试穿", "上身", "bm风"));
 
         this.categories.add(new Category("street", "街拍", "街拍・随拍・路人", -13408664, -14406270, true,
-                apis(A_SHEJIE, A_NVDA, A_NDYM, A_SHWD, A_SBKL, A_XIAOXIAO),
+                apis(A_SHEJIE, A_NVDA, A_NDYM, A_SHWD, A_SBKL, A_XIAOXIAO, A_REWU),
                 "街拍", "路人", "street", "街头", "抓拍", "自拍", "walk", "扫街", "路拍", "偶遇", "对镜自拍"));
 
+        this.categories.add(new Category("japanese", "日系", "和风・浴衣・原宿", -14013421, -10400162, true,
+                apis(A_MANZHAN, A_CHUANDA, A_LUOLI, A_KSDZ, A_COS, A_XIAOXIAO),
+                "日系", "和风", "浴衣", "原宿", "harajuku", "和服", "yukata", "日式", "japanese", "涩谷"));
+
+        this.categories.add(new Category("sport", "运动", "瑜伽・健身・跑步", -14143585, -11972814, true,
+                apis(A_YUZU, A_WMSC, A_REWU, A_NVDA, A_SHEJIE, A_SHWD),
+                "运动", "瑜伽", "健身", "跑步", "瑜伽裤", "sporty", "yoga", "gym", "健身服", "马拉松"));
+
+        this.categories.add(new Category("home", "居家", "睡衣・家居・晨间", -13940412, -11974378, true,
+                apis(A_REWU, A_WMSC, A_NDYM, A_NVDA, A_BAISIS, A_TIANMEI),
+                "居家", "睡衣", "家居服", "起床", "晨间", "家居", "窗边", "loungewear"));
+
+        this.categories.add(new Category("office", "职场", "OL・西装・通勤", -13742297, -11643072, true,
+                apis(A_CHUANDA, A_BIANZHUANG, A_SHEJIE, A_NVDA, A_KSDZ, A_REWU),
+                "职场", "ol", "西装", "职业装", "通勤", "衬衫", "office", "白领"));
+
         this.categories.add(new Category("kuaishou", "快手", "变装・街拍・翻唱", -14409621, -14239885, true,
-                apis(A_KS_SJ, A_KSSP, A_KSDZ, A_KSFC, A_ZZXJJ2, A_JUHE, A_ZZXJJ),
+                apis(A_KS_SJ, A_KSSP, A_KSDZ, A_KSFC, A_ZZXJJ2, A_JUHE, A_ZZXJJ, A_REWU),
                 "快手", "kuaishou", "kssp", "翻唱", "老铁", "快影", "快手sp"));
 
         this.categories.add(new Category("recommend", "推荐", "带原始标题・作品名", -13599761, -12911949, true,
-                apis(A_KS_SJ, A_JUHE, A_ZZXJJ, A_KSSP),
+                apis(A_KS_SJ, A_JUHE, A_ZZXJJ, A_ZZXJJ2, A_KSSP, A_TIANMEI),
                 "推荐", "热门", "recommend", "精选推荐", "作品", "上热门"));
 
         this.categories.add(new Category("daily", "日常", "街拍・随拍・生活", -12150, -5211332, true,
-                apis(A_NVDA, A_NDYM, A_SHEJIE, A_QINGCHUN, A_XIAOXIAO, A_YUZU,
-                        A_SBKL, A_SHWD, A_KSFC, A_ZZXJJ, A_ZZXJJ2, A_KSSP),
-                "日常", "daily", "vlog", "生活", "随拍", "记录", "日记", "碎片", "上学", "通勤", "周末", "一天", "plog"));
+                apis(A_NVDA, A_NDYM, A_SHEJIE, A_QINGCHUN, A_XIAOXIAO, A_YUZU, A_SBKL, A_SHWD, A_KSFC,
+                        A_ZZXJJ, A_ZZXJJ2, A_KSSP, A_TIANMEI),
+                "日常", "daily", "vlog", "生活", "随拍", "记录", "日记", "碎片", "上学", "周末", "一天", "plog", "日常感"));
 
         this.categories.add(new Category("mix", "合集", "多源聚合・一次到底", -13092849, -16047070, true,
-                apis(A_KS_SJ, A_JUHE, A_ZZXJJ, A_ZZXJJ2, A_KSSP, A_XJJ, A_NVGAO, A_REWU,
-                        A_TIANMEI, A_HEISIS, A_WMSC, A_LUOLI, A_COS, A_NDYM, A_SHEJIE),
+                apis(A_KS_SJ, A_JUHE, A_ZZXJJ, A_ZZXJJ2, A_KSSP, A_XJJ, A_NVGAO, A_REWU, A_TIANMEI,
+                        A_HEISIS, A_WMSC, A_LUOLI, A_COS, A_NDYM, A_SHEJIE, A_YUZU),
                 "合集", "精选", "聚合", "合集版", "mix", "collection", "合辑", "混剪", "汇总", "打包"));
 
         this.categories.add(new Category(C_ALL, "全部在线", "全站所有源一起随机", -7352065, -12624971, true,
                 apis(A_KS_SJ, A_JUHE, A_ZZXJJ, A_ZZXJJ2, A_XJJ, A_NVGAO, A_REWU, A_TIANMEI,
                         A_KSSP, A_HEISIS, A_WMSC, A_LUOLI, A_COS, A_BAISIS, A_QINGCHUN,
-                        A_NVDA, A_SHEJIE, A_KSDZ, A_KSFC),
+                        A_NVDA, A_SHEJIE, A_KSDZ, A_KSFC, A_YUZU, A_DIAODAI, A_NDYM, A_SBKL),
                 new String[0]));
 
         this.categories.add(new Category(C_FAV, "我的收藏", "手动收藏", -10929, -4684277, new String[0]));
